@@ -22,8 +22,8 @@ export const tamaguiStyles = {
   }),
   TextBody: styled(Text,{
     fontFamily: '$body',
-    color: 'black',
     fontSize: 14,
+    color: 'black',
     textAlign: 'center',
   }),
   TextRegular: styled(Text,{
@@ -40,6 +40,7 @@ export const tamaguiStyles = {
   }),
   InputField: styled(Input,{
     width: "80%",
+    height:"6%",
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -47,6 +48,16 @@ export const tamaguiStyles = {
     backgroundColor: '#f0f0f0',
     borderColor: '#f0f0f0',
     placeholderTextColor: '#a7a7a7',
+    marginBottom: 20,
+  }),
+  InputPicker: styled(XStack,{
+    width: "80%",
+    height: "6%",
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f0f0f0',
+    borderColor: '#f0f0f0',
     marginBottom: 20,
   }),
   PrimaryButton: styled(Button,{
@@ -65,4 +76,15 @@ export const tamaguiStyles = {
     fontWeight: '800',
     alignSelf: 'flex-start',
   }),
+  picker: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: 'bold', 
+    color:'black',
+  },
+  pickerItemLabel: {
+    fontSize: 14,
+    color:'black',
+    fontWeight: 'bold',
+  },
 };

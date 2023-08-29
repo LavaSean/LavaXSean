@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles'
-import { XStack, Button } from 'tamagui'
 import TertiaryButton from '../components/Buttons/TertiaryButton';
 
 const SignInScreen = () => {
@@ -27,9 +26,11 @@ const SignInScreen = () => {
                 Connect, contribute, and make an impact with your valued insights.
             </tamaguiStyles.TextBody>
             <tamaguiStyles.EmptyContainerY height='10%'/>
+            <tamaguiStyles.TextTitle style={{fontSize:14, alignSelf:'flex-start'}} paddingHorizontal='10%'>Email</tamaguiStyles.TextTitle>
             <tamaguiStyles.InputField 
                 placeholder='Please enter your email'
             />
+            <tamaguiStyles.TextTitle style={{fontSize:14, alignSelf:'flex-start'}} paddingHorizontal='10%'>Password</tamaguiStyles.TextTitle>
             <tamaguiStyles.InputField 
                 marginBottom='2%'
                 placeholder='Please enter your password'
@@ -54,7 +55,7 @@ const SignInScreen = () => {
                     textPressedColor='#3e3e3e'
                 />
             </tamaguiStyles.RowContainer>
-            <Button onPress={()=>navigation.navigate('Home')}>To Home</Button>
+            <tamaguiStyles.PrimaryButton onPress={()=>navigation.navigate('Home')}>To Home</tamaguiStyles.PrimaryButton>
         </tamaguiStyles.Container>
     </ScrollView>
   )
