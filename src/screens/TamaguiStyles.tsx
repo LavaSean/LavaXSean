@@ -1,5 +1,5 @@
-import { styled, YStack, XStack, Text, Input, Button } from 'tamagui';
-import { Dimensions } from 'react-native';
+import { styled, YStack, XStack, Text, Input, Button, TextArea } from 'tamagui';
+import { Dimensions, TouchableOpacity } from 'react-native';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -40,7 +40,7 @@ export const tamaguiStyles = {
   }),
   InputField: styled(Input,{
     width: "80%",
-    height:"6%",
+    height:45,
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,6 +68,26 @@ export const tamaguiStyles = {
     fontSize: 16,
     fontWeight: 700,
   }),
+  CircularButton: styled(Button,{
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    backgroundColor:'grey',
+    color:'black',
+  }),
+  ModalContainer:styled(YStack,{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  }),
+  ModalContent:styled(YStack,{
+    width:'80%',
+    paddingVertical: '5%',
+    backgroundColor:'white',
+    alignItems:'center',
+    justifyContent:'center',
+  }),
   TextButton: styled(Button,{
     backgroundColor: 'rgba(255, 0, 0, 0)', //transparent
     color: 'green',
@@ -76,6 +96,17 @@ export const tamaguiStyles = {
     fontWeight: '800',
     alignSelf: 'flex-start',
   }),
+  TextArea: styled(TextArea,{
+    backgroundColor: 'white',
+    width: '100%',
+    minHeight: '25%',
+    textAlignVertical:"top",
+    borderColor: '#CCCCCC',
+    placeholderTextColor: '#959595',
+    color: 'black',
+  }),
+
+  //CSS
   picker: {
     flex: 1,
     fontSize: 14,
