@@ -11,6 +11,10 @@ const SignInScreen = () => {
         navigation.navigate('SignUp');
       };
 
+    const SignInNavigation = () => {
+        navigation.navigate('Home');
+    };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
         <tamaguiStyles.Container>
@@ -44,7 +48,7 @@ const SignInScreen = () => {
                     textPressedColor='#3e3e3e'
                 />
             </tamaguiStyles.RowContainer>
-            <tamaguiStyles.PrimaryButton>Login</tamaguiStyles.PrimaryButton>
+            <tamaguiStyles.PrimaryButton onPress={SignInNavigation}>Login</tamaguiStyles.PrimaryButton>
             <tamaguiStyles.RowContainer>
                 <tamaguiStyles.TextBody>Don't have an account?</tamaguiStyles.TextBody>
                 <TertiaryButton
