@@ -9,6 +9,7 @@ import SignUpScreen from '../screens/SignUpScreen';
 import FeedbackScreen from '../screens/FeedbackScreen';
 import AddFeedbackScreen from '../screens/AddFeedbackScreen';
 import OverviewScreen from '../screens/OverviewScreen';
+import FeedbackDetailScreen from '../screens/FeedbackDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,10 +26,11 @@ const Navigations = () => {
             <Stack.Screen name="SignIn" component={SignInScreen} options={{headerShown: false}}/>
             <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Feedback" component={FeedbackScreen} options={{headerShown: true}}/>
+            <Stack.Screen name="Feedback" component={FeedbackScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Overview" component={OverviewScreen} options={{headerShown: true}}/>
             <Stack.Screen name="Dashboard" component={DashboardScreen} options={{headerShown: true}}/>
             <Stack.Screen name="AddFeedback" component={AddFeedbackScreen}/>
+            <Stack.Screen name="FeedbackDetail" component={FeedbackDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )

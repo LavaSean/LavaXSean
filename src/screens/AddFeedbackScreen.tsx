@@ -91,10 +91,10 @@ const AddFeedbackScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
         <tamaguiStyles.Container alignItems='flex-start' justifyContent='flex-start' paddingHorizontal='$5'>
           <BackButton onPress={()=>navigation.navigate('Feedback')}/>
-          <tamaguiStyles.TextTitle fontSize='$9'>Leave a feedback</tamaguiStyles.TextTitle>
+          <tamaguiStyles.TextTitle style={{fontSize: 30}}>Leave a feedback</tamaguiStyles.TextTitle>
           <tamaguiStyles.TextBody textAlign='left' color='#959595'>Every feedback you share is a stepping stone on our path to excellence.</tamaguiStyles.TextBody>
           <tamaguiStyles.EmptyContainerY height='3%'/>
-          <tamaguiStyles.TextBody fontSize='$6'>Ratings</tamaguiStyles.TextBody>
+          <tamaguiStyles.TextBody style={{fontSize: 18}}>Ratings</tamaguiStyles.TextBody>
           <tamaguiStyles.TextBody textAlign='left' color='#959595'>Would you recommend our apps?</tamaguiStyles.TextBody>
           <tamaguiStyles.EmptyContainerY height='3%'/>
           <tamaguiStyles.RowContainer width='100%' justifyContent='center'>
@@ -108,7 +108,7 @@ const AddFeedbackScreen = () => {
             />
           </tamaguiStyles.RowContainer>
           <tamaguiStyles.EmptyContainerY height='5%'/>
-          <tamaguiStyles.TextBody fontSize='$6'>Feedback</tamaguiStyles.TextBody>
+          <tamaguiStyles.TextBody style={{fontSize: 18}}>Feedback</tamaguiStyles.TextBody>
           <tamaguiStyles.TextBody textAlign='left' color='#959595'>How was your overall experience? Tell us more!</tamaguiStyles.TextBody>
           <tamaguiStyles.EmptyContainerY height='3%'/>
           <tamaguiStyles.TextArea 

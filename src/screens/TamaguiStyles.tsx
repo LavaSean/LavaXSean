@@ -72,7 +72,7 @@ export const tamaguiStyles = {
     borderRadius: 100,
     width: 50,
     height: 50,
-    backgroundColor:'grey',
+    backgroundColor:'#f0f0f0',
     color:'black',
   }),
   ModalContainer:styled(YStack,{

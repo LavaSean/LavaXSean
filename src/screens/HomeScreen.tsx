@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles'
-import { Avatar, Button } from 'tamagui'
+import { Avatar } from 'tamagui'
 import { Activity, Airplay } from '@tamagui/lucide-icons'
 import { auth, db } from '../../firebase';
 
