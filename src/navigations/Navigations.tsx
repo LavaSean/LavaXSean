@@ -10,6 +10,7 @@ import FeedbackScreen from '../screens/FeedbackScreen';
 import AddFeedbackScreen from '../screens/AddFeedbackScreen';
 import OverviewScreen from '../screens/OverviewScreen';
 import FeedbackDetailScreen from '../screens/FeedbackDetailScreen';
+import UserFeedbackDetailScreen from '../screens/UserFeedbackDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,14 +24,15 @@ const Navigations = () => {
             cardStyle: { backgroundColor: '#FDFDFD'}, // Background color for all screens
           }}
         >
-            <Stack.Screen name="SignIn" component={SignInScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Feedback" component={FeedbackScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Overview" component={OverviewScreen} options={{headerShown: true}}/>
-            <Stack.Screen name="Dashboard" component={DashboardScreen} options={{headerShown: true}}/>
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Feedback" component={FeedbackScreen} />
+            <Stack.Screen name="Overview" component={OverviewScreen}/>
+            <Stack.Screen name="Dashboard" component={DashboardScreen} />
             <Stack.Screen name="AddFeedback" component={AddFeedbackScreen}/>
             <Stack.Screen name="FeedbackDetail" component={FeedbackDetailScreen} />
+            <Stack.Screen name="UserFeedbackDetail" component={UserFeedbackDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )

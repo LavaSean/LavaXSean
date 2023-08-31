@@ -60,6 +60,7 @@ const AddFeedbackScreen = () => {
 
     if (currentUser) {
       const feedbackData = {
+        userId: currentUser.uid,
         username: username,
         email: email,
         ratings: rating,
@@ -90,7 +91,7 @@ const AddFeedbackScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
         <tamaguiStyles.Container alignItems='flex-start' justifyContent='flex-start' paddingHorizontal='$5'>
-          <BackButton onPress={()=>navigation.navigate('Feedback')}/>
+          <BackButton onPress={()=>navigation.goBack()}/>
           <tamaguiStyles.TextTitle style={{fontSize: 30}}>Leave a feedback</tamaguiStyles.TextTitle>
           <tamaguiStyles.TextBody textAlign='left' color='#959595'>Every feedback you share is a stepping stone on our path to excellence.</tamaguiStyles.TextBody>
           <tamaguiStyles.EmptyContainerY height='3%'/>

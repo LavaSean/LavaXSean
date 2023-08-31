@@ -99,11 +99,19 @@ export const tamaguiStyles = {
   TextArea: styled(TextArea,{
     backgroundColor: 'white',
     width: '100%',
-    minHeight: '25%',
+    minHeight: '20%',
     textAlignVertical:"top",
     borderColor: '#CCCCCC',
     placeholderTextColor: '#959595',
     color: 'black',
+  }),
+  XRecContainer: styled(XStack,{
+    width:'100%',
+    height: '100%',
+    borderColor: '#CCCCCC',
+    backgroundColor:'#f6f6f6',
+    borderWidth: 1,
+    borderRadius: 10,
   }),
 
   //CSS

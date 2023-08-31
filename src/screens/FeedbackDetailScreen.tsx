@@ -1,15 +1,43 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, Alert } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import BackButton from '../components/Buttons/BackButton';
 import { tamaguiStyles } from './TamaguiStyles';
 import { Avatar } from 'tamagui';
-import { db } from '../../firebase';
+import { auth, db } from '../../firebase';
 
 const FeedbackDetailScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { feedback } = route.params;
+  const [userType, setUserType] = useState('');
+
+  useEffect(() => {
+    // Set up the listener for authentication state changes
+    const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // Fetch userType from Firestore
+        const userRef = db.collection('users').doc(user.uid);
+        const unsubscribeUser = userRef.onSnapshot((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            setUserType(userData.userType);
+          }
+        });
+  
+        return () => {
+          unsubscribeUser();
+        };
+      } else {
+        // User is not authenticated, handle accordingly
+        setUserType('');
+      }
+    });
+
+    return () => {
+      unsubscribeAuth();
+    };
+  }, []);
 
   const handleDelete = () => {
     // Show confirmation alert
@@ -42,7 +70,7 @@ const FeedbackDetailScreen = () => {
   // Use the feedback object to display the details
   return (
     <tamaguiStyles.Container alignItems='flex-start' justifyContent='flex-start' paddingHorizontal='$5'>
-        <BackButton onPress={() => navigation.navigate('Feedback')} />
+        <BackButton onPress={() => navigation.goBack()} />
         <tamaguiStyles.TextTitle marginBottom='3%'>Feedback Details</tamaguiStyles.TextTitle>
         <tamaguiStyles.RowContainer marginBottom='5%'>
             <Avatar circular size="$10">
@@ -70,7 +98,9 @@ const FeedbackDetailScreen = () => {
         <tamaguiStyles.TextBody marginBottom='5%' color='#959595'>{feedback.ratings}</tamaguiStyles.TextBody>
         <tamaguiStyles.TextBody style={{fontSize: 18}}>Feedback:</tamaguiStyles.TextBody>
         <tamaguiStyles.TextBody textAlign='left' marginBottom='5%' color='#959595'>{feedback.content}</tamaguiStyles.TextBody>
-        <tamaguiStyles.PrimaryButton width='100%' onPress={handleDelete}>Delete</tamaguiStyles.PrimaryButton>
+        {userType === 'Admin' && (
+          <tamaguiStyles.PrimaryButton width='100%' onPress={handleDelete}>Delete</tamaguiStyles.PrimaryButton>
+        )}
     </tamaguiStyles.Container>
   );
 };

@@ -1,32 +1,44 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles';
 import { Plus, MoreHorizontal } from '@tamagui/lucide-icons';
 import BackButton from '../components/Buttons/BackButton';
-import { db } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { Avatar } from 'tamagui';
 
 const FeedbackScreen = () => {
   const navigation = useNavigation();
-  const [feedbackList, setFeedbackList] = React.useState([]);
+  const [feedbackList, setFeedbackList] = useState([]);
+  const currentUser = auth.currentUser;
+  const [userType, setUserType] = useState('');
 
-  React.useEffect(() => {
-    const unsubscribe = db.collection('feedback').onSnapshot((snapshot) => {
-      const feedbackData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-  
-      // Sort the feedbackData array in descending order based on timestamp
-      feedbackData.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
-      setFeedbackList(feedbackData);
+  useEffect(() => {
+    const unsubscribe = db.collection('feedback')
+      .where('userId', '==', currentUser?.uid)
+      .onSnapshot((snapshot) => {
+        const feedbackData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        feedbackData.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
+        setFeedbackList(feedbackData);
+      });
+
+    // Fetch userType from the user collection
+    const userRef = db.collection('users').doc(currentUser?.uid);
+    const unsubscribeUser = userRef.onSnapshot((doc) => {
+      if (doc.exists) {
+        const userData = doc.data();
+        setUserType(userData.userType); // Set the userType in state
+      }
     });
-  
+
     return () => {
       unsubscribe();
+      unsubscribeUser();
     };
-  }, []);
+  }, [currentUser]);
 
   const renderFeedbackItem = ({ item }) => (
     <tamaguiStyles.RowContainer>
@@ -36,15 +48,19 @@ const FeedbackScreen = () => {
           <Avatar.Fallback bc="grey" />
         </Avatar>
         <tamaguiStyles.ColumnContainer paddingLeft='5%' width='35%'>
-            <tamaguiStyles.TextTitle textAlign='left' style={{fontSize:14}}>{item.username.length>12? item.username.substring(0,10)+'...':item.username}</tamaguiStyles.TextTitle>
+            <tamaguiStyles.TextTitle textAlign='left' style={{fontSize:14}}>{item.username.length>12? item.username.substring(0,8)+'...':item.username}</tamaguiStyles.TextTitle>
             <tamaguiStyles.TextBody textAlign='left' style={{fontSize:10}}>
               {item.timestamp.toDate().toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </tamaguiStyles.TextBody>
+            <tamaguiStyles.TextBody textAlign='left' style={{fontSize:10}}>
+              {item.timestamp.toDate().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
               })}
             </tamaguiStyles.TextBody>
         </tamaguiStyles.ColumnContainer>
@@ -52,14 +68,15 @@ const FeedbackScreen = () => {
           <tamaguiStyles.TextTitle fontSize='$2'>Ratings</tamaguiStyles.TextTitle>
           <tamaguiStyles.TextBody>{item.ratings}</tamaguiStyles.TextBody>
         </tamaguiStyles.ColumnContainer>
-        <tamaguiStyles.CircularButton icon={MoreHorizontal} onPress={() => navigation.navigate('FeedbackDetail', { feedback: item })}/>
+        <tamaguiStyles.CircularButton icon={MoreHorizontal} 
+          onPress={() => {navigation.navigate('UserFeedbackDetail', { feedback: item })}}/>
       </tamaguiStyles.RowContainer>
     </tamaguiStyles.RowContainer>
   );
 
   return (
     <tamaguiStyles.Container alignItems='flex-start' justifyContent='flex-start' paddingHorizontal='$5'>
-      <BackButton onPress={() => navigation.navigate('Home')} />
+      <BackButton onPress={() => navigation.goBack()} />
       <tamaguiStyles.TextTitle>Feedback List</tamaguiStyles.TextTitle>
       <tamaguiStyles.PrimaryButton width='100%' icon={Plus}
         onPress={() => navigation.navigate('AddFeedback')}
@@ -67,12 +84,16 @@ const FeedbackScreen = () => {
         Add Feedback
       </tamaguiStyles.PrimaryButton>
 
-      <FlatList
-        data={feedbackList}
-        renderItem={renderFeedbackItem}
-        keyExtractor={(item) => item.id}
-        style={{ marginTop: 20 }}
-      />
+      {feedbackList.length === 0 ? (
+        <tamaguiStyles.TextBody alignSelf='center' color='#959595' >No feedback submitted</tamaguiStyles.TextBody>
+      ) : (
+        <FlatList
+          data={feedbackList}
+          renderItem={renderFeedbackItem}
+          keyExtractor={(item) => item.id}
+          style={{ marginTop: 20 }}
+        />
+      )}
     </tamaguiStyles.Container>
   );
 };
