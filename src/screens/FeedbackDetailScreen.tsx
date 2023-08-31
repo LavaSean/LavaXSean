@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, ActivityIndicator } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import BackButton from '../components/Buttons/BackButton';
 import { tamaguiStyles } from './TamaguiStyles';
@@ -11,6 +11,8 @@ const FeedbackDetailScreen = () => {
   const navigation = useNavigation();
   const { feedback } = route.params;
   const [userType, setUserType] = useState('');
+  const [deleteInProgress, setDeleteInProgress] = useState(false);
+  
 
   useEffect(() => {
     // Set up the listener for authentication state changes
@@ -40,7 +42,7 @@ const FeedbackDetailScreen = () => {
   }, []);
 
   const handleDelete = () => {
-    // Show confirmation alert
+    setDeleteInProgress(true);
     Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this feedback?',
@@ -52,9 +54,17 @@ const FeedbackDetailScreen = () => {
             // Delete the feedback from Firebase
             try {
               await db.collection('feedback').doc(feedback.id).delete();
-              navigation.navigate('Feedback'); // Navigate back to the feedback list
+              Alert.alert(
+                'Delete',
+                'Feedback deleted successfully',
+                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+                { cancelable: false }
+              );
+              navigation.goBack();
             } catch (error) {
               console.error('Error deleting feedback:', error);
+            } finally {
+              setDeleteInProgress(false);
             }
           },
         },
@@ -99,7 +109,13 @@ const FeedbackDetailScreen = () => {
         <tamaguiStyles.TextBody style={{fontSize: 18}}>Feedback:</tamaguiStyles.TextBody>
         <tamaguiStyles.TextBody textAlign='left' marginBottom='5%' color='#959595'>{feedback.content}</tamaguiStyles.TextBody>
         {userType === 'Admin' && (
-          <tamaguiStyles.PrimaryButton width='100%' onPress={handleDelete}>Delete</tamaguiStyles.PrimaryButton>
+          <tamaguiStyles.PrimaryButton width='100%' onPress={handleDelete}>
+            {deleteInProgress ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              'Delete'
+            )}
+          </tamaguiStyles.PrimaryButton>
         )}
     </tamaguiStyles.Container>
   );

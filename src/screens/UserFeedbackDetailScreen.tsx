@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { View, Text, Alert, ScrollView } from 'react-native';
+import { View, Text, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import BackButton from '../components/Buttons/BackButton';
 import { tamaguiStyles } from './TamaguiStyles';
@@ -13,9 +13,11 @@ const UserFeedbackDetailScreen = () => {
   const { feedback } = route.params;
   const [rating, setRating] = useState(feedback.ratings);
   const [content, setContent] = useState(feedback.content);
+  const [updateInProgress, setUpdateInProgress] = useState(false);
+  const [deleteInProgress, setDeleteInProgress] = useState(false);
 
   const handleUpdate = async () => {
-    // Update the feedback in Firebase
+    setUpdateInProgress(true);
     try {
         const updatedTimestamp = new Date();
 
@@ -24,15 +26,23 @@ const UserFeedbackDetailScreen = () => {
             content: content,
             timestamp: updatedTimestamp,
         });
+        Alert.alert(
+          'Update',
+          'Feedback updated successfully',
+          [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+          { cancelable: false }
+        );
         
         navigation.goBack();
     } catch (error) {
       console.error('Error updating feedback:', error);
+    } finally {
+      setUpdateInProgress(false);
     }
   };
 
   const handleDelete = () => {
-    // Show confirmation alert
+    setDeleteInProgress(true);
     Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this feedback?',
@@ -44,9 +54,17 @@ const UserFeedbackDetailScreen = () => {
             // Delete the feedback from Firebase
             try {
               await db.collection('feedback').doc(feedback.id).delete();
-              navigation.navigate('Feedback'); // Navigate back to the feedback list
+              Alert.alert(
+                'Delete',
+                'Feedback deleted successfully',
+                [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+                { cancelable: false }
+              );
+              navigation.goBack(); // Navigate back to the feedback list
             } catch (error) {
               console.error('Error deleting feedback:', error);
+            } finally {
+              setDeleteInProgress(false);
             }
           },
         },
@@ -104,8 +122,20 @@ const UserFeedbackDetailScreen = () => {
                 placeholder='Enter your feedback here'
                 value={content}
                 onChangeText={setContent}/>
-            <tamaguiStyles.PrimaryButton width='100%' onPress={handleUpdate}>Update</tamaguiStyles.PrimaryButton>
-            <tamaguiStyles.PrimaryButton width='100%' onPress={handleDelete}>Delete</tamaguiStyles.PrimaryButton>
+            <tamaguiStyles.PrimaryButton width='100%' onPress={handleUpdate}>
+              {updateInProgress ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                'Update'
+              )}
+            </tamaguiStyles.PrimaryButton>
+            <tamaguiStyles.PrimaryButton width='100%' onPress={handleDelete}>
+              {deleteInProgress ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                'Delete'
+              )}
+            </tamaguiStyles.PrimaryButton>
         </tamaguiStyles.Container>
     </ScrollView>
   );

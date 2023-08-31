@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native'
+import { StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { tamaguiStyles } from './TamaguiStyles'
+import { tamaguiStyles } from './TamaguiStyles';
 import TertiaryButton from '../components/Buttons/TertiaryButton';
 import { Picker } from '@react-native-picker/picker';
 import { auth, db } from '../../firebase';
@@ -13,6 +13,7 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [userType, setUserType] = useState('User');
+  const [isLoadingRegister, setIsLoadingRegister] = useState(false);
 
   const SignInNavigation = () => {
     navigation.navigate('SignIn');
@@ -65,9 +66,11 @@ const SignUpScreen = () => {
   };
 
   const handleSignUp = () => {
+    setIsLoadingRegister(true);
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
+        setIsLoadingRegister(false);
         const user = userCredentials.user;
         Alert.alert(
           'Registration successful',
@@ -92,6 +95,7 @@ const SignUpScreen = () => {
         );
       })
       .catch((error) => {
+        setIsLoadingRegister(false);
         Alert.alert('Error', error.message, [{ text: 'OK' }], {
           cancelable: false,
         });
@@ -150,7 +154,13 @@ const SignUpScreen = () => {
                 <Picker.Item label="Admin" value="Admin" style={tamaguiStyles.pickerItemLabel}/>
               </Picker>
             </tamaguiStyles.InputPicker>
-            <tamaguiStyles.PrimaryButton onPress={onRegisterPressed}>Register</tamaguiStyles.PrimaryButton>
+            <tamaguiStyles.PrimaryButton onPress={onRegisterPressed}>
+              {isLoadingRegister ? (
+                <ActivityIndicator color="white" /> // Show the loading spinner
+              ) : (
+                'Register'
+              )}
+            </tamaguiStyles.PrimaryButton>
             <tamaguiStyles.RowContainer>
                 <tamaguiStyles.TextBody>Already have an account?</tamaguiStyles.TextBody>
                 <TertiaryButton

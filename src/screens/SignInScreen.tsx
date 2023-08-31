@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, ScrollView, Alert, Animated, Modal, TouchableOpacity } from 'react-native'
+import { StyleSheet, ScrollView, Alert, Animated, Modal, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles'
 import TertiaryButton from '../components/Buttons/TertiaryButton';
 import { auth, db } from '../../firebase';
-import PrimaryButton from '../components/Buttons/PrimaryButton';
 
 const SignInScreen = () => {
     const navigation = useNavigation();
@@ -12,6 +11,8 @@ const SignInScreen = () => {
     const [password, setPassword] = useState('');
     const [resetEmail, setResetEmail] = useState('');
     const [showResetModal, setShowResetModal] = useState(false);
+    const [isLoadingSignIn, setIsLoadingSignIn] = useState(false);
+    const [isLoadingReset, setIsLoadingReset] = useState(false);
     const slideAnimation = useRef(new Animated.Value(0)).current;
 
     const SignUpNavigation = () => {
@@ -24,9 +25,11 @@ const SignInScreen = () => {
     };
 
     const handleSignIn = () => {
+        setIsLoadingSignIn(true);
         auth
           .signInWithEmailAndPassword(email, password)
           .then(async (userCredential) => {
+            setIsLoadingSignIn(false);
             // Signed in successfully, get user data
             const user = userCredential.user;
       
@@ -56,12 +59,15 @@ const SignInScreen = () => {
             }
           })
           .catch((error) => {
+            setIsLoadingSignIn(false);
             Alert.alert('Error', 'User account not found!\nPlease verify your email and password.', [{ text: 'OK' }], { cancelable: false });
           });
       };
 
       const handleResetPassword = async () => {
+        setIsLoadingReset(true);
         if (!isValidEmail(resetEmail)) {
+          setIsLoadingReset(false);
           Alert.alert('Error', 'Please enter a valid email', [{ text: 'OK' }]);
           return;
         }
@@ -83,7 +89,9 @@ const SignInScreen = () => {
             { cancelable: false }
           );
           setShowResetModal(false);
+          setIsLoadingReset(false);
         } catch (error) {
+          setIsLoadingReset(false);
           Alert.alert('Error', error.message, [{ text: 'OK' }], { cancelable: false });
         }
       };
@@ -141,7 +149,13 @@ const SignInScreen = () => {
                     textPressedColor='#3e3e3e'
                 />
             </tamaguiStyles.RowContainer>
-            <tamaguiStyles.PrimaryButton onPress={handleSignIn}>Login</tamaguiStyles.PrimaryButton>
+            <tamaguiStyles.PrimaryButton onPress={handleSignIn}>
+              {isLoadingSignIn ? (
+                <ActivityIndicator color="white" /> // Show the loading spinner
+                ) : (
+                'Login'
+              )}
+            </tamaguiStyles.PrimaryButton>
             <tamaguiStyles.RowContainer>
                 <tamaguiStyles.TextBody>Don't have an account?</tamaguiStyles.TextBody>
                 <TertiaryButton
@@ -163,7 +177,13 @@ const SignInScreen = () => {
                             onChangeText={setResetEmail}
                         />
                         
-                        <tamaguiStyles.PrimaryButton onPress={handleResetPassword}>Reset Password</tamaguiStyles.PrimaryButton>
+                        <tamaguiStyles.PrimaryButton onPress={handleResetPassword}>
+                        {isLoadingReset ? (
+                          <ActivityIndicator color="white" /> // Show the loading spinner
+                        ) : (
+                          'Reset Password'
+                        )}
+                        </tamaguiStyles.PrimaryButton>
                         <TertiaryButton
                             text="Cancel"
                             onPress={closeResetModal}

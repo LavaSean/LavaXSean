@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native'
+import { StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { tamaguiStyles } from './TamaguiStyles'
+import { tamaguiStyles } from './TamaguiStyles';
 import { Rating } from 'react-native-ratings';
 import BackButton from '../components/Buttons/BackButton';
 import { auth, db } from '../../firebase';
@@ -14,6 +14,7 @@ const AddFeedbackScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [unsubscribeUserSnapshot, setUnsubscribeUserSnapshot] = useState(null);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
   useEffect(() => {
     // Set up the listener for authentication state changes
@@ -59,6 +60,7 @@ const AddFeedbackScreen = () => {
     const currentUser = auth.currentUser;
 
     if (currentUser) {
+      setIsLoadingSubmit(true);
       const feedbackData = {
         userId: currentUser.uid,
         username: username,
@@ -71,6 +73,7 @@ const AddFeedbackScreen = () => {
       try {
         await db.collection('feedback').add(feedbackData);
         console.log('Feedback submitted successfully.');
+        setIsLoadingSubmit(false);
         Alert.alert(
           'Feedback',
           'Feedback submitted successfully',
@@ -80,6 +83,7 @@ const AddFeedbackScreen = () => {
         navigation.navigate('Feedback');
         // You can add a navigation action here to navigate to a success screen or home screen
       } catch (error) {
+        setIsLoadingSubmit(false);
         console.error('Error submitting feedback:', error);
         Alert.alert('Error', (error as Error).message, [{ text: 'OK' }], {
           cancelable: false,
@@ -117,7 +121,13 @@ const AddFeedbackScreen = () => {
             value={content}
             onChangeText={setContent}/>
           <tamaguiStyles.EmptyContainerY height='3%'/>
-          <tamaguiStyles.PrimaryButton width='100%' onPress={submitFeedback}>Submit</tamaguiStyles.PrimaryButton>
+          <tamaguiStyles.PrimaryButton width='100%' onPress={submitFeedback}>
+            {isLoadingSubmit ? (
+              <ActivityIndicator color="white" /> // Show the loading spinner
+            ) : (
+              'Submit'
+            )}
+          </tamaguiStyles.PrimaryButton>
          
         </tamaguiStyles.Container>
     </ScrollView>

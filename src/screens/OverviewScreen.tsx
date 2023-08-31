@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles';
-import { Plus, MoreHorizontal } from '@tamagui/lucide-icons';
+import { MoreHorizontal } from '@tamagui/lucide-icons';
 import BackButton from '../components/Buttons/BackButton';
 import { db } from '../../firebase';
 import { Avatar } from 'tamagui';
@@ -10,6 +10,7 @@ import { Avatar } from 'tamagui';
 const OverviewScreen = () => {
   const navigation = useNavigation();
   const [feedbackList, setFeedbackList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = db.collection('feedback')
@@ -20,6 +21,7 @@ const OverviewScreen = () => {
           ...doc.data(),
         }));
         setFeedbackList(feedbackData);
+        setLoading(false);
       });
 
     return () => {
@@ -63,7 +65,11 @@ const OverviewScreen = () => {
       <BackButton onPress={() => navigation.goBack()} />
       <tamaguiStyles.TextTitle>Overall Feedback List</tamaguiStyles.TextTitle>
 
-      {feedbackList.length === 0 ? (
+      {loading ? (
+        <tamaguiStyles.RowContainer width='100%' justifyContent='center'>
+          <ActivityIndicator size="large" color="#000000" />
+        </tamaguiStyles.RowContainer>
+      ) : feedbackList.length === 0 ? (
         <tamaguiStyles.TextBody alignSelf='center' color='#959595'>
           No feedback available
         </tamaguiStyles.TextBody>
