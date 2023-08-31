@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, Alert, Animated, Modal, ActivityIndicator } from 'react-native'
+import { ScrollView, Alert, Animated, Modal, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles'
@@ -7,9 +7,9 @@ import { auth, db } from '../../firebase';
 
 const SignInScreen = () => {
     const navigation = useNavigation();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [resetEmail, setResetEmail] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [resetEmail, setResetEmail] = useState<string>('');
     const [showResetModal, setShowResetModal] = useState(false);
     const [isLoadingSignIn, setIsLoadingSignIn] = useState(false);
     const [isLoadingReset, setIsLoadingReset] = useState(false);
@@ -25,44 +25,41 @@ const SignInScreen = () => {
     };
 
     const handleSignIn = () => {
-        setIsLoadingSignIn(true);
-        auth
-          .signInWithEmailAndPassword(email, password)
-          .then(async (userCredential) => {
-            setIsLoadingSignIn(false);
-            // Signed in successfully, get user data
-            const user = userCredential.user;
-      
+      setIsLoadingSignIn(true);
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then(async (userCredential) => {
+          setIsLoadingSignIn(false);
+          // Get the user object from the userCredential
+          const user = userCredential.user;
+  
+          // Check if the user object is not null before proceeding
+          if (user) {
             // Retrieve the user document from Firestore
             const userDoc = await db.collection('users').doc(user.uid).get();
-      
+  
             if (userDoc.exists) {
-              // Get the userType field from the document data
-              const userType = userDoc.data().userType;
-      
               Alert.alert(
                 'Welcome',
                 `You have successfully signed in to your account.`,
                 [{ text: 'OK' }],
                 { cancelable: false }
               );
-      
-              // Check the userType and navigate accordingly
-              if (userType === 'User') {
-                navigation.navigate('Home');
-              } else if (userType === 'Admin') {
-                navigation.navigate('Home');
-              }
+              navigation.navigate('Home');
             } else {
               // User document does not exist
               Alert.alert('Error', 'User document not found', [{ text: 'OK' }]);
             }
-          })
-          .catch((error) => {
-            setIsLoadingSignIn(false);
+          } else {
+            // Handle the case where the user object is null
             Alert.alert('Error', 'User account not found!\nPlease verify your email and password.', [{ text: 'OK' }], { cancelable: false });
-          });
-      };
+          }
+        })
+        .catch((error) => {
+          setIsLoadingSignIn(false);
+          Alert.alert('Error', 'User account not found!\nPlease verify your email and password.', [{ text: 'OK' }], { cancelable: false });
+        });
+  };
 
       const handleResetPassword = async () => {
         setIsLoadingReset(true);
@@ -151,7 +148,7 @@ const SignInScreen = () => {
             </tamaguiStyles.RowContainer>
             <tamaguiStyles.PrimaryButton onPress={handleSignIn}>
               {isLoadingSignIn ? (
-                <ActivityIndicator color="white" /> // Show the loading spinner
+                <ActivityIndicator color="white" />
                 ) : (
                 'Login'
               )}
@@ -201,31 +198,3 @@ const SignInScreen = () => {
 }
 
 export default SignInScreen
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  closeText: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  modalText: {
-    color: 'white',
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  resetButton: {
-    backgroundColor: '#3e3e3e',
-    padding: 10,
-    borderRadius: 5,
-  },
-  resetButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});

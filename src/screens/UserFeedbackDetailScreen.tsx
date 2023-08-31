@@ -11,8 +11,8 @@ const UserFeedbackDetailScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { feedback } = route.params;
-  const [rating, setRating] = useState(feedback.ratings);
-  const [content, setContent] = useState(feedback.content);
+  const [rating, setRating] = useState<number>(feedback.ratings);
+  const [content, setContent] = useState<string>(feedback.content);
   const [updateInProgress, setUpdateInProgress] = useState(false);
   const [deleteInProgress, setDeleteInProgress] = useState(false);
 
@@ -112,7 +112,7 @@ const UserFeedbackDetailScreen = () => {
                     type="star"
                     fractions={1}
                     startingValue={rating}
-                    onFinishRating={(rating) => setRating(rating)}
+                    onFinishRating={(rating: number) => setRating(rating)}
                 />
             </tamaguiStyles.RowContainer>
             

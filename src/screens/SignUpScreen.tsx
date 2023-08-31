@@ -15,10 +15,6 @@ const SignUpScreen = () => {
   const [userType, setUserType] = useState('User');
   const [isLoadingRegister, setIsLoadingRegister] = useState(false);
 
-  const SignInNavigation = () => {
-    navigation.navigate('SignIn');
-  };
-
   const isValidEmail = (email: string) => {
     // Regular expression pattern for email validation
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -82,7 +78,7 @@ const SignUpScreen = () => {
                 // Add user data to Firestore
                 const userRef = db.collection('users').doc(user.uid);
                 await userRef.set({
-                  email: user.email,
+                  email: email,
                   username: username,
                   userType: userType,
                   // Add any additional user data you want to store
@@ -165,7 +161,7 @@ const SignUpScreen = () => {
                 <tamaguiStyles.TextBody>Already have an account?</tamaguiStyles.TextBody>
                 <TertiaryButton
                     text="Sign In Now"
-                    onPress={SignInNavigation}
+                    onPress={()=>{navigation.navigate('SignIn')}}
                     alignItems='flex-start'
                     textColor='#959595'
                     textPressedColor='#3e3e3e'
@@ -178,5 +174,3 @@ const SignUpScreen = () => {
 }
 
 export default SignUpScreen
-
-const styles = StyleSheet.create({})

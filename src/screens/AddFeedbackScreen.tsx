@@ -8,11 +8,11 @@ import { auth, db } from '../../firebase';
 
 const AddFeedbackScreen = () => {
   const navigation = useNavigation();
-  const [rating, setRating] = useState(0);
-  const [content, setContent] = useState('');
+  const [rating, setRating] = useState<number>(0);
+  const [content, setContent] = useState<string>('');
   const [currentUser, setCurrentUser] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [unsubscribeUserSnapshot, setUnsubscribeUserSnapshot] = useState(null);
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
@@ -80,8 +80,7 @@ const AddFeedbackScreen = () => {
           [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
           { cancelable: false }
         );
-        navigation.navigate('Feedback');
-        // You can add a navigation action here to navigate to a success screen or home screen
+        navigation.goBack();
       } catch (error) {
         setIsLoadingSubmit(false);
         console.error('Error submitting feedback:', error);
@@ -109,7 +108,7 @@ const AddFeedbackScreen = () => {
               fractions={1}
               startingValue={0}
               imageSize={40}
-              onFinishRating={(rating) => setRating(rating)}
+              onFinishRating={(rating: number) => setRating(rating)}
             />
           </tamaguiStyles.RowContainer>
           <tamaguiStyles.EmptyContainerY height='5%'/>

@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { tamaguiStyles } from './TamaguiStyles';
 import { MoreHorizontal } from '@tamagui/lucide-icons';
 import BackButton from '../components/Buttons/BackButton';
-import { db } from '../../firebase';
+import { db, firebase } from '../../firebase';
 import { Avatar } from 'tamagui';
 
 const OverviewScreen = () => {
   const navigation = useNavigation();
-  const [feedbackList, setFeedbackList] = useState([]);
+  const [feedbackList, setFeedbackList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
+
+  interface Feedback {
+    username: string;
+    timestamp: firebase.firestore.Timestamp;
+    ratings: number;
+    content: string;
+  }
 
   useEffect(() => {
     const unsubscribe = db.collection('feedback')
@@ -29,7 +36,7 @@ const OverviewScreen = () => {
     };
   }, []);
 
-  const renderFeedbackItem = ({ item }) => (
+  const renderFeedbackItem = ({ item }:{item:Feedback}) => (
     <tamaguiStyles.RowContainer>
       <tamaguiStyles.RowContainer width='100%' borderColor='black' borderWidth='$0.25' borderRadius='$size.1' paddingVertical='3%' paddingHorizontal='3%' marginBottom='3%'>
         <Avatar circular size="$5" width='25%'>
@@ -84,7 +91,5 @@ const OverviewScreen = () => {
     </tamaguiStyles.Container>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default OverviewScreen;
