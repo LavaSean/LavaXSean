@@ -1,5 +1,5 @@
 import { styled, YStack, XStack, Text, Input, Button, TextArea } from 'tamagui';
-import { Dimensions, TouchableOpacity } from 'react-native';
+import { Dimensions } from 'react-native';
 
 const screenHeight = Dimensions.get('window').height;
 

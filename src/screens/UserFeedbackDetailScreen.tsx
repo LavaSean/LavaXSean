@@ -1,10 +1,10 @@
-import React,{useState,useEffect} from 'react';
-import { View, Text, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import React,{useState} from 'react';
+import { Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import BackButton from '../components/Buttons/BackButton';
 import { tamaguiStyles } from './TamaguiStyles';
 import { Avatar } from 'tamagui';
-import { auth, db } from '../../firebase';
+import { db } from '../../firebase';
 import { Rating } from 'react-native-ratings';
 
 const UserFeedbackDetailScreen = () => {
